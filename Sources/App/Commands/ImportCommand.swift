@@ -21,7 +21,7 @@ final class ImportCommand: Command {
         let xml = SWXMLHash.lazy(xmlContent)
 
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ"
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
 
         console.print("loaded xml file")
 
@@ -33,12 +33,13 @@ final class ImportCommand: Command {
                 longitude: Double(element.attribute(by: "lon")!.text)!
             )
 
-            // dateFormatter.date(from: element.attribute(by: "created_at")!.text)!
+            let createdAt = dateFormatter.date(from: element.attribute(by: "created_at")!.text)!
+            let closedAt = dateFormatter.date(from: element.attribute(by: "closed_at")!.text)
 
             let note = Note.init(
                 location: location,
-                createdAt: Date(),
-                closedAt: Date()
+                createdAt: createdAt,
+                closedAt: closedAt
             )
 
             note.id = Identifier(Int(element.attribute(by: "id")!.text)!)
@@ -48,10 +49,12 @@ final class ImportCommand: Command {
             for elem in elem["comment"].all {
                 let element = elem.element!
 
+                let createdAt = dateFormatter.date(from: element.attribute(by: "timestamp")!.text)!
+
                 let comment = Comment.init(
                     noteId: note.id!,
                     action: Action(rawValue: element.attribute(by: "action")!.text)!,
-                    createdAt: Date(),
+                    createdAt: createdAt,
                     text: element.text
                 )
 

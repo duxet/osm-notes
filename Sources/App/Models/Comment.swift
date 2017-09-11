@@ -57,7 +57,7 @@ extension Comment: Preparation {
             builder.parent(Note.self)
             builder.string(actionKey)
             builder.date(createdAtKey)
-            builder.string(textKey)
+            builder.custom(textKey, type: "text")
         }
     }
 
