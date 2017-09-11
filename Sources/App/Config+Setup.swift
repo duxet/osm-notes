@@ -18,5 +18,6 @@ extension Config {
 
     private func setupPreparations() throws {
         preparations.append(Note.self)
+        preparations.append(Comment.self)
     }
 }

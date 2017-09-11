@@ -5,9 +5,13 @@ import HTTP
 final class Note: Model {
     let storage = Storage()
 
-    var location: Location?
+    var location: Location
     var createdAt: Date
     var closedAt: Date?
+    
+    var comments: Children<Note, Comment> {
+        return children()
+    }
 
     static let idKey = "id"
     static let locationKey = "location"
@@ -31,13 +35,12 @@ final class Note: Model {
     func makeRow() throws -> Row {
         var row = Row()
 
-        try row.set(Note.locationKey, String(format: "(%.8f,%.8f)", location!.latitude, location!.longitude))
+        try row.set(Note.locationKey, String(format: "(%.8f,%.8f)", location.latitude, location.longitude))
         try row.set(Note.createdAtKey, createdAt)
         try row.set(Note.closedAtKey, closedAt)
 
         return row
     }
-
     private static func parseLocation(_ locationString: String) -> Location {
         let locationArray = locationString
             .replacingOccurrences(of: "(", with: "")
@@ -79,6 +82,7 @@ extension Note: JSONConvertible {
         var json = JSON()
         try json.set(Note.idKey, id)
         try json.set(Note.locationKey, location)
+        try json.set("comments", comments.all())
         return json
     }
 }
@@ -86,17 +90,11 @@ extension Note: JSONConvertible {
 extension Note: ResponseRepresentable { }
 
 extension Note: Updateable {
-    // Updateable keys are called when `post.update(for: req)` is called.
-    // Add as many updateable keys as you like here.
     public static var updateableKeys: [UpdateableKey<Note>] {
         return [
-            // If the request contains a String at key "content"
-            // the setter callback will be called.
-            /*
-            UpdateableKey(Note.locationKey, String.self) { note, content in
+            /* UpdateableKey(Note.locationKey, String.self) { note, content in
                 note.content = content
-            }
-            */
+            } */
         ]
     }
 }

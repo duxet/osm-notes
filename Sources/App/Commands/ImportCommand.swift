@@ -44,6 +44,19 @@ final class ImportCommand: Command {
             note.id = Identifier(Int(element.attribute(by: "id")!.text)!)
 
             try note.save()
+
+            for elem in elem["comment"].all {
+                let element = elem.element!
+
+                let comment = Comment.init(
+                    noteId: note.id!,
+                    action: Action(rawValue: element.attribute(by: "action")!.text)!,
+                    createdAt: Date(),
+                    text: element.text
+                )
+
+                try comment.save()
+            }
         }
     }
 }
