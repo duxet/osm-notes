@@ -25,7 +25,7 @@ before_install:
         fi
 
 env:
-    - POSTGRES_URL=psql://postgres@localhost:5432/osm
+    - POSTGRES_URL=psql://postgres:@localhost:5432/osm
 
 script:
     - psql -c 'create database osm;' -U postgres
