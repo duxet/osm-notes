@@ -4,6 +4,10 @@ os:
 language: generic
 sudo: required
 dist: trusty
+services:
+  - postgresql
+addons:
+  postgresql: "9.6"
 
 osx_image: xcode8.3
 before_install:
@@ -17,7 +21,11 @@ before_install:
             sudo chmod -R a+rx /usr/;
         fi
 
+env:
+    - POSTGRES_URL=psql://postgres@localhost:5432/osm
+
 script:
+    - psql -c 'create database osm;' -U postgres
     - swift build
     - swift build -c release
     - swift test
