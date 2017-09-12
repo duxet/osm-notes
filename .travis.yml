@@ -8,6 +8,9 @@ services:
   - postgresql
 addons:
   postgresql: "9.6"
+cache:
+  directories:
+    - .build
 
 osx_image: xcode8.3
 before_install:
