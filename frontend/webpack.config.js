@@ -34,9 +34,15 @@ module.exports = {
     ]
   },
   resolve: {
+    extensions: ['.js', '.vue'],
     alias: {
       'vue$': 'vue/dist/vue.esm.js'
     }
+  },
+  devServer: {
+    contentBase: path.join(__dirname, "dist"),
+    compress: true,
+    port: 9000
   },
   devtool: '#eval-source-map'
 }

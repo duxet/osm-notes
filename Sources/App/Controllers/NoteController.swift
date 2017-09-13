@@ -4,7 +4,6 @@ import HTTP
 final class NoteController: ResourceRepresentable {
     func index(_ req: Request) throws -> ResponseRepresentable {
         return try Note.makeQuery()
-            .join(Comment.self)
             .limit(100)
             .all()
             .makeJSON()
