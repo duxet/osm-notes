@@ -1,31 +1,23 @@
-os:
-    - linux
-    - osx
 language: generic
 sudo: required
 dist: trusty
+
 services:
   - postgresql
 addons:
   postgresql: "9.6"
+
 cache:
   directories:
     - .build
 
-osx_image: xcode8.3
-before_install:
-    - if [ $TRAVIS_OS_NAME == "osx" ]; then
-            brew tap vapor/tap;
-            brew update;
-            brew install vapor;
-        else
-            eval "$(curl -sL https://apt.vapor.sh)";
-            sudo apt-get install vapor;
-            sudo chmod -R a+rx /usr/;
-        fi
-
 env:
     - POSTGRES_URL=psql://postgres:@localhost:5432/osm
+
+before_install:
+    - eval "$(curl -sL https://apt.vapor.sh)"
+    - sudo apt-get install vapor
+    - sudo chmod -R a+rx /usr/
 
 script:
     - psql -c 'create database osm;' -U postgres
