@@ -19,6 +19,9 @@ jobs:
       - run: swift build
       - run: swift build -c release
       - run: swift test
+      - store_artifacts:
+          path: .build/x86_64-unknown-linux/release/Run
+          destination: osm-notes
       - save_cache:
           key: swift-{{ checksum "Package.pins" }}
           paths:
