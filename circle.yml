@@ -1,11 +1,25 @@
-dependencies:
-  override:
-    - eval "$(curl -sL https://apt.vapor.sh)"
-    - sudo apt-get install vapor
-    - sudo chmod -R a+rx /usr/
-test:
-  override:
-    - swift build
-    - swift build -c release
-    - swift test
-    
+version: 2
+jobs:
+  build:
+    working_directory: ~/osm-notes
+    docker:
+      - image: swiftdocker/swift
+        environment:
+          POSTGRES_URL: psql://osm:osm@localhost:5432/osm
+      - image: postgres:10-alpine
+        environment:
+          POSTGRES_USER: osm
+          POSTGRES_PASSWORD: osm
+    steps:
+      - checkout
+      - restore_cache:
+          key: swift-{{ checksum "Package.pins" }}
+      - run: apt-get update
+      - run: apt-get install -y libpq-dev
+      - run: swift build
+      - run: swift build -c release
+      - run: swift test
+      - save_cache:
+          key: swift-{{ checksum "Package.pins" }}
+          paths:
+            - .build
