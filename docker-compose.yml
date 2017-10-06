@@ -1,0 +1,9 @@
+version: "3"
+services:
+  postgres:
+    image: postgres:10-alpine
+    environment:
+      POSTGRES_USER: osm
+      POSTGRES_PASSWORD: osm
+    ports:
+      - "5432:5432"

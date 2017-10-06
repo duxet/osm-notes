@@ -13,9 +13,9 @@
         <note-list :notes="notes" />
       </div>
       <div class="column">
-        <v-map :zoom=13 :center="[47.413220, -1.219482]">
+        <v-map :zoom=1 :center="[0, 0]">
           <v-tilelayer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"></v-tilelayer>
-          <v-marker :lat-lng="[47.413220, -1.219482]"></v-marker>
+          <v-marker v-for="note in notes" :key="note.id" :lat-lng="[note.location.latitude, note.location.longitude]"></v-marker>
         </v-map>
       </div>
     </div>
