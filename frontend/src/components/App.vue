@@ -13,7 +13,7 @@
         <note-list :notes="notes" />
       </div>
       <div class="column">
-        <v-map :zoom=1 :center="[0, 0]">
+        <v-map ref="map" :zoom=1 :center="[0, 0]" v-on:l-moveend="loadNotes">
           <v-tilelayer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"></v-tilelayer>
           <v-marker v-for="note in notes" :key="note.id" :lat-lng="[note.location.latitude, note.location.longitude]"></v-marker>
         </v-map>
@@ -42,7 +42,13 @@ export default {
   },
   methods: {
     loadNotes: function () {
-      Axios.get('http://localhost:8080/notes').then((response) => {
+      let bbox = this.$refs.map.mapObject.getBounds()
+
+      Axios.get('http://localhost:8080/notes', {
+        params: {
+          bbox: [bbox.getSouthWest().lat, bbox.getSouthWest().lng, bbox.getNorthEast().lat, bbox.getNorthEast().lng].join(',')
+        }
+      }).then((response) => {
         this.notes = response.data
       })
     }
