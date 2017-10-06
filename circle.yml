@@ -13,7 +13,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: swift-{{ checksum "Package.pins" }}
+          key: swift-{{ checksum "Package.resolved" }}
       - run: apt-get update
       - run: apt-get install -y libpq-dev
       - run: swift build
@@ -23,6 +23,6 @@ jobs:
           path: .build/x86_64-unknown-linux/release/Run
           destination: osm-notes
       - save_cache:
-          key: swift-{{ checksum "Package.pins" }}
+          key: swift-{{ checksum "Package.resolved" }}
           paths:
             - .build
